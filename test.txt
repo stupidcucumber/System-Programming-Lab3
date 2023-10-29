@@ -6,7 +6,7 @@ int main()
     std::vector<int> _delimiters;
     std::cout << "Hello\'!" << std::endl;
     ndvajbjkx
-
+    a = 10 / 2;
     this.apply(); // This is another comment!
 
     '\aa'
