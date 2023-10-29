@@ -1,8 +1,10 @@
 #include "Lexer.h"
 #include <iostream>
+#include "yaml-cpp/yaml.h"
 
 int main(int argnum, const char** args)
 {
+    YAML::Node configLexer = YAML::LoadFile("lexer.yaml")["lexer"];
     std::unordered_map<std::string, LexemType> converter = {
         {
             "String", LexemType::String
@@ -55,21 +57,16 @@ int main(int argnum, const char** args)
 
     std::string filename(args[1]);
     Lexer lexer;
+    for (auto it = configLexer["regex"].begin(); it != configLexer["regex"].end(); ++it)
+    {
+        std::string type = (*it).first.as<std::string>();
+        std::string rawRegex = (*it).second.as<std::string>();
 
-    std::regex regString("\".*\"");
-    std::regex regRegularChar("\'[^\\\\]?\'");
-    std::regex regEscapeChar(R"(\'\\\S{1}\')");
-    std::regex regWhole("^[0-9]+$");
-    std::regex regFloat("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)");
-    std::regex regHex("0[xX][0-9a-fA-F]+");
+        std::cout << rawRegex << std::endl;
 
-    std::regex regCommentInline("^//.*");
-    std::regex regCommentBlock("^/\*[\S\n\s]*\*/");
-    std::regex regPreprocessor("^#.*");
-    std::regex regIdentifier("[a-zA-Z_][a-zA-Z0-9_]*");
+        lexer.registerRegex(converter.at(type), std::regex(rawRegex));
+    }
 
-    std::regex regOperator("==|-=|\\+=|/=|\\*=|&=|>=|<=|<<|>>|!|::|\\.|\\=|\\+|\\*|-|<|>");
-    std::regex regDelimiter(";|\\{|\\}|\\(|\\)|\\[|\\]|\\s|,");
 
     std::vector<Lexem> lexems = lexer.parse(filename);
 

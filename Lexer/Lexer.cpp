@@ -1,6 +1,11 @@
 #include "Lexer.h"
 #include <iostream>
 
+void Lexer::registerRegex(LexemType type, std::regex _regex)
+{
+    _registered_regexes[type] = _regex;
+}
+
 bool Lexer::isOperator(std::string seq)
 {
     for (std::string a : _basic_operators)

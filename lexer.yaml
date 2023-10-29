@@ -20,13 +20,13 @@ lexer:
     do, not, this]
 
   regex:
-    String: R"(\".*\")"
-    Char: R"(\'\\\S{1}\'|\'[^\\]?\')"
-    Whole: R"(^[0-9]+$)"
-    Float: R"([+-]?([0-9]+([.][0-9]*)?|[.][0-9]+))"
-    Hexadecimal: R"(0[xX][0-9a-fA-F]+)"
-    Comment: R"(^//.*|^/\*[\S\n\s]*\*/)"
-    Preprocessor: R"(^#.*)"
-    Identifier: R"([a-zA-Z_][a-zA-Z0-9_]*)"
-    Operator: R"(==|-=|\+=|/=|\*=|&=|>=|<=|<<|>>|!|::|\.|=|\+|\*|-|<|>|\\)"
-    Delimiter: R"(;|\{|\}|\(|\)|\[|\]|\s|,)"
+    String: \".*\"
+    Char: \'\\\S{1}\'|\'[^\\]?\'
+    Whole: ^[0-9]+$
+    Float:  '[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)'
+    Hexadecimal: 0[xX][0-9a-fA-F]+
+    Comment: ^//.*|^/\*[\S\n\s]*\*/
+    Preprocessor: ^#.*
+    Identifier: '[a-zA-Z_][a-zA-Z0-9_]*'
+    Operator: ==|-=|\+=|/=|\*=|&=|>=|<=|<<|>>|!|::|\.|=|\+|\*|-|<|>|\\
+    Delimiter: ;|\{|\}|\(|\)|\[|\]|\s|,
