@@ -1,0 +1,13 @@
+#include <iostream>
+#pragma once
+
+int main()
+{
+    std::vector<int> _delimiters;
+    std::cout << "Hello\'!" << std::endl;
+    ndvajbjkx
+
+    this.apply(); // This is another comment!
+
+    '\aa'
+}
