@@ -166,7 +166,6 @@ std::string Lexer::nextContent(std::queue<Token>& tokens)
 
         if (currentToken == "//")
         {
-            std::cout << "I am here!" << std::endl;
             while (tokens.size() > 0)
             {
                 currentToken = tokens.front().getContent();

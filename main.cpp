@@ -62,8 +62,6 @@ int main(int argnum, const char** args)
         std::string type = (*it).first.as<std::string>();
         std::string rawRegex = (*it).second.as<std::string>();
 
-        std::cout << rawRegex << std::endl;
-
         lexer.registerRegex(converter.at(type), std::regex(rawRegex));
     }
 
