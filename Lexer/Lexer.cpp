@@ -6,11 +6,29 @@ void Lexer::registerRegex(LexemType type, std::regex _regex)
     _registered_regexes[type] = _regex;
 }
 
+void Lexer::registerKeyword(std::string keyword)
+{
+    _keywords.push_back(keyword);
+}
+
 bool Lexer::isOperator(std::string seq)
 {
     for (std::string a : _basic_operators)
     {
         if (a == seq)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool Lexer::isKeyword(std::string seq)
+{
+    for (std::string b : _keywords)
+    {
+        if (b == seq)
         {
             return true;
         }
@@ -46,6 +64,11 @@ std::vector<Lexem> Lexer::parse(std::string filename)
 
             if (std::regex_match(content, currentRegex))
             {
+                if (currentType == LexemType::Identifier && isKeyword(content))
+                {
+                    currentType = LexemType::Reserved;
+                }
+                
                 Lexem lexem(currentType, content);
                 result.push_back(lexem);
 
