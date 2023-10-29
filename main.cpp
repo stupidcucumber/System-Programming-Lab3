@@ -65,6 +65,11 @@ int main(int argnum, const char** args)
         lexer.registerRegex(converter.at(type), std::regex(rawRegex));
     }
 
+    for (auto it = configLexer["keywords"].begin(); it != configLexer["keywords"].end(); ++it)
+    {
+        lexer.registerKeyword((*it).as<std::string>());
+    }
+
 
     std::vector<Lexem> lexems = lexer.parse(filename);
 
