@@ -1,6 +1,10 @@
 #include "Lexer.h"
-#include <regex>
 #include <iostream>
+
+void Lexer::registerRegex(LexemType type, std::regex _regex)
+{
+    _registered_regexes[type] = _regex;
+}
 
 bool Lexer::isOperator(std::string seq)
 {
@@ -22,111 +26,31 @@ std::vector<Lexem> Lexer::parse(std::string filename)
     mTokens = tokenizer.tokenize();
     
     std::string content = "";
+    std::regex regBlank("\\s*");
+    bool pushed;
 
     while (mTokens.size() != 0)
     {
-        bool pushed = false;
+        pushed = false;
         content = nextContent(mTokens);
-
-        std::regex regBlank("\\s*");
 
         if (std::regex_match(content, regBlank))
         {
             continue;
         }
 
-        std::regex regString("\".*\"");
-        std::regex regRegularChar("\'[^\\\\]?\'");
-        std::regex regEscapeChar(R"(\'\\\S{1}\')");
-        std::regex regWhole("^[0-9]+$");
-        std::regex regFloat("[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)");
-        std::regex regHex("0[xX][0-9a-fA-F]+");
-
-        std::regex regCommentInline("^//.*");
-        std::regex regCommentBlock("^/\\*[\\S\\n\\s]*\\*/");
-        std::regex regPreprocessor("^#.*");
-        std::regex regIdentifier("[a-zA-Z_][a-zA-Z0-9_]*");
-
-        std::regex regOperator("==|-=|\\+=|/=|\\*=|&=|>=|<=|<<|>>|!|::|\\.|=|\\+|\\*|-|<|>");
-        std::regex regDelimiter(";|\\{|\\}|\\(|\\)|\\[|\\]|\\s|,");
-
-        if (std::regex_match(content, regString))
+        for (auto it = _registered_regexes.begin(); it != _registered_regexes.end() && !pushed; ++it)
         {
-            Lexem lexem(LexemType::String, content);
+            LexemType currentType = (*it).first;
+            std::regex currentRegex = (*it).second;
 
-            result.push_back(lexem);
-            pushed = true;
-        }
+            if (std::regex_match(content, currentRegex))
+            {
+                Lexem lexem(currentType, content);
+                result.push_back(lexem);
 
-        if (std::regex_match(content, regRegularChar) || std::regex_match(content, regEscapeChar))
-        {
-            Lexem lexem(LexemType::Char, content);
-            result.push_back(lexem);
-            pushed = true;
-        }
-
-        if (std::regex_match(content, regHex))
-        {
-            Lexem lexem(LexemType::Hexadecimal, content);
-
-            result.push_back(lexem);
-            pushed = true;
-        }        
-        
-        if (std::regex_match(content, regWhole))
-        {
-            Lexem lexem(LexemType::Whole, content);
-
-            result.push_back(lexem);
-            pushed = true;
-        }
-
-        if (std::regex_match(content, regFloat))
-        {
-            Lexem lexem(LexemType::Float, content);
-
-            result.push_back(lexem);
-            pushed = true;
-        }
-
-        if (std::regex_match(content, regIdentifier))
-        {
-            Lexem lexem(LexemType::Identifier, content);
-
-            result.push_back(lexem);
-            pushed = true;
-        }
-
-        if (std::regex_match(content, regCommentInline) || std::regex_match(content, regCommentBlock))
-        {
-            Lexem lexem(LexemType::Comment, content);
-
-            result.push_back(lexem);
-            pushed = true;
-        }
-
-        if (std::regex_match(content, regPreprocessor))
-        {
-            Lexem lexem(LexemType::Preprocessor, content);
-
-            result.push_back(lexem);
-            pushed = true;
-        }
-
-        if (std::regex_match(content, regOperator))
-        {
-            Lexem lexem(LexemType::Operator, content);
-
-            result.push_back(lexem);
-            pushed = true;
-        }
-
-        if (std::regex_match(content, regDelimiter))
-        {
-            Lexem lexem(LexemType::Delimiter, content);
-
-            result.push_back(lexem);
-            pushed = true;
+                pushed = true;
+            }
         }
 
         if (!pushed)
@@ -242,7 +166,6 @@ std::string Lexer::nextContent(std::queue<Token>& tokens)
 
         if (currentToken == "//")
         {
-            std::cout << "I am here!" << std::endl;
             while (tokens.size() > 0)
             {
                 currentToken = tokens.front().getContent();

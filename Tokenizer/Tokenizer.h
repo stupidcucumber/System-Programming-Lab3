@@ -24,7 +24,7 @@ class Tokenizer
             }
         };
 
-        std::vector<char> _delimiters = {'(', ')', '{', '}', ';', '\n', '<', '>', '"', '\'', ','};
+        std::vector<char> _delimiters = {'(', ')', '{', '}', ';', '\n', '<', '>', '"', '\'', ',', ' '};
 
         std::string mCurrentToken;
         TokenType mTokenType = TokenType::NONE;        

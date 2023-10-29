@@ -1,4 +1,5 @@
 #include "Tokenizer.h"
+#include <iostream>
 
 Tokenizer::Tokenizer(std::string filename)
 {
@@ -35,6 +36,7 @@ Token Tokenizer::nextToken()
     while (!mFile.eof() && !end)
     {
         currentChar = mFile.get();
+
         if (mTokenType == TokenType::NONE)
         {
             end = handleNone(currentChar);
